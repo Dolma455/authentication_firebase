@@ -25,6 +25,13 @@ class VerifyPhoneScreen extends StatelessWidget {
               TextFormField(
                 controller: _codeController,
                 decoration: const InputDecoration(),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              ElevatedButton(
+                onPressed: () {},
+                child: const Text("Verify"),
               )
             ],
           )),

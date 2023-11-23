@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutterweb/phone_auth/user_authentication/user_auth_phone.dart';
+
 
 import 'package:flutterweb/sign_up_auth/validation/signup_validation.dart';
 
@@ -8,12 +8,11 @@ class SignUpPhoneScreen extends StatelessWidget {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  final FirebaseAuthServce auth = FirebaseAuthServce();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   SignUpPhoneScreen({super.key});
 
   void _submitPhoneNumber() {
-    auth.phoneSignUp();
+
   }
 
   @override
