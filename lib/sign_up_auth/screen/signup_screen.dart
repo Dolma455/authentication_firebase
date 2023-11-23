@@ -47,7 +47,7 @@ class SignUpScreen extends StatelessWidget {
                     decoration: const InputDecoration(
                       hintText: "password",
                     ),
-                    validator: SignUpValidation.validatePassword,
+                    // validator: SignUpValidation.validatePassword,
                   ),
                   const SizedBox(
                     height: 16,
@@ -59,7 +59,7 @@ class SignUpScreen extends StatelessWidget {
                         String password = passwordController.text;
                         try {
                           final UserCredential userCredential =
-                              await authService.signUp(email, password);
+                              await authService.signUp(email, password, context);
 
                           print('User signed up: ${userCredential.user}');
                           Navigator.push(

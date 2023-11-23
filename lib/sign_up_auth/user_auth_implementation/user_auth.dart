@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthServices {
@@ -7,18 +9,54 @@ class FirebaseAuthServices {
       clientId:
           "225378996225-r7ccdble1fmseb004ecagvdoum0nks9a.apps.googleusercontent.com");
 
-  Future<UserCredential> signUp(String email, String password) async {
+  Future<UserCredential> signUp(
+      String email, String password, BuildContext context) async {
     try {
-      UserCredential userCredential =
-          await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      UserCredential userCredential = await _firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      User? user = _firebaseAuth.currentUser;
+
+      if (user != null && !user.emailVerified) {
+        await user.sendEmailVerification();
+      }
+
       return userCredential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text("Error"),
+                content: const Text("The password provided is too weak"),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            });
       } else if (e.code == 'email-already-in-use') {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text("Error"),
+                content:
+                    const Text("The account already exists for that email."),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("OK")),
+                ],
+              );
+            });
         print('The account already exists for that email.');
       }
       rethrow;
@@ -36,12 +74,22 @@ class FirebaseAuthServices {
         email: email,
         password: password,
       );
+      User? user = credential.user;
+      if (user != null && !user.emailVerified) {
+        await _firebaseAuth.signOut();
+        throw FirebaseAuthException(
+          code: 'email-not-verified',
+          message: 'Please verify your email before signing in.',
+        );
+      }
       return credential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print("No user found for that email");
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided for the user');
+      } else if (e.code == 'email-not-verified') {
+        print(e.message);
       }
       rethrow;
     } catch (e) {
