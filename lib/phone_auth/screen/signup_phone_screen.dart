@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-
+import 'package:flutterweb/phone_auth/user_authentication/user_auth_phone.dart';
 
 import 'package:flutterweb/sign_up_auth/validation/signup_validation.dart';
 
@@ -11,8 +10,40 @@ class SignUpPhoneScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   SignUpPhoneScreen({super.key});
 
-  void _submitPhoneNumber() {
+  void _submitPhoneNumber(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      try {
+     
 
+        // Start the phone number verification process
+        await FirebasePhoneAuth().verifyPhoneNumber(phoneController.text,context);
+
+        // Dismiss the loading indicator
+        Navigator.of(context).pop();
+      } catch (e) {
+        // Dismiss the loading indicator
+        Navigator.of(context).pop();
+
+        // Show an error message
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Error"),
+              content: Text(e.toString()),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
   }
 
   @override
@@ -53,29 +84,10 @@ class SignUpPhoneScreen extends StatelessWidget {
                   const SizedBox(
                     height: 16,
                   ),
-                  // ElevatedButton(
-                  // onPressed: () async {
-                  // if (_formKey.currentState!.validate()) {
-                  //   int phone = phoneController.text as int;
-                  //   String password = passwordController.text;
-                  //   try {
-                  //     UserCredential userCredential = await auth.phoneSignUp();
-
-                  //     print('User signed up: ${userCredential.user}');
-                  //     Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //             builder: (context) =>
-                  //                 SignUpPhoneHomeScreen(phone: phone)));
-                  //   } catch (e) {
-                  //     print('Sign up failed: $e');
-                  //   }
-                  // }
-                  //  },
-                  //child: const Text("Sign Up"),
-                  //),
                   TextButton(
-                    onPressed: _submitPhoneNumber,
+                    onPressed: () {
+                      _submitPhoneNumber(context);
+                    },
                     child: const Text('Verify Phone Number'),
                   ),
                   const SizedBox(

@@ -57,7 +57,6 @@ class FirebaseAuthServices {
                 ],
               );
             });
-        print('The account already exists for that email.');
       }
       rethrow;
     } catch (e) {
@@ -67,7 +66,7 @@ class FirebaseAuthServices {
   }
 
   Future<UserCredential> signInWithEmailAndP(
-      String email, String password) async {
+      String email, String password, BuildContext context) async {
     try {
       UserCredential credential =
           await _firebaseAuth.signInWithEmailAndPassword(
@@ -77,6 +76,7 @@ class FirebaseAuthServices {
       User? user = credential.user;
       if (user != null && !user.emailVerified) {
         await _firebaseAuth.signOut();
+
         throw FirebaseAuthException(
           code: 'email-not-verified',
           message: 'Please verify your email before signing in.',
@@ -85,11 +85,53 @@ class FirebaseAuthServices {
       return credential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print("No user found for that email");
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text("Error"),
+                content: const Text("Sorry,Can not find user"),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("OK"))
+                ],
+              );
+            });
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for the user');
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text("Error"),
+                content: const Text("Wrong password provided for the user"),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("OK"))
+                ],
+              );
+            });
       } else if (e.code == 'email-not-verified') {
-        print(e.message);
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text("Error"),
+                content: Text("${e.message}"),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("OK"))
+                ],
+              );
+            });
       }
       rethrow;
     } catch (e) {

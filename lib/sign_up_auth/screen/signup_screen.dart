@@ -59,7 +59,8 @@ class SignUpScreen extends StatelessWidget {
                         String password = passwordController.text;
                         try {
                           final UserCredential userCredential =
-                              await authService.signUp(email, password, context);
+                              await authService.signUp(
+                                  email, password, context);
 
                           print('User signed up: ${userCredential.user}');
                           Navigator.push(
@@ -69,12 +70,12 @@ class SignUpScreen extends StatelessWidget {
                                         email: email,
                                       )));
                         } catch (e) {
-                          if (e is FirebaseAuthException &&
-                              e.code == 'user-not-found') {
-                            print("The account already exist for that email");
-                          } else {
-                            print("Sign Up failed: $e");
-                          }
+                          // if (e is FirebaseAuthException &&
+                          //     e.code == 'user-not-found') {
+                          //   print("The account already exist for that email");
+                          // } else {
+                          //   print("Sign Up failed: $e");
+                          // }
                         }
                       }
                     },

@@ -77,9 +77,10 @@ class SignInScrn extends StatelessWidget {
                         String email = emailController.text;
                         String password = passwordController.text;
                         try {
-                          UserCredential userCredential = await authService
-                              .signInWithEmailAndP(email, password);
-                          print('User signed in: ${userCredential.user}');
+                          await authService.signInWithEmailAndP(
+                              email, password, context);
+                          // print('User signed in: ${userCredential.user}');
+
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -87,7 +88,7 @@ class SignInScrn extends StatelessWidget {
                                         email: email,
                                       )));
                         } catch (e) {
-                          print('Sign in failed: $e');
+                          print(e);
                         }
                       }
                     },
