@@ -9,6 +9,24 @@ class FirebaseAuthServices {
       clientId:
           "225378996225-r7ccdble1fmseb004ecagvdoum0nks9a.apps.googleusercontent.com");
 
+  void showErrorDialog(BuildContext context, String message) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Error"),
+            content: Text(message),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("OK"))
+            ],
+          );
+        });
+  }
+
   Future<UserCredential> signUp(
       String email, String password, BuildContext context) async {
     try {
@@ -24,43 +42,13 @@ class FirebaseAuthServices {
       return userCredential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text("Error"),
-                content: const Text("The password provided is too weak"),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('OK'),
-                  ),
-                ],
-              );
-            });
+        showErrorDialog(context, "The password provided is too weak");
       } else if (e.code == 'email-already-in-use') {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text("Error"),
-                content:
-                    const Text("The account already exists for that email."),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("OK")),
-                ],
-              );
-            });
+        showErrorDialog(context, "The account already exists for that email");
       }
       rethrow;
     } catch (e) {
-      print(e);
+      showErrorDialog(context, e.toString());
       rethrow;
     }
   }
@@ -85,57 +73,15 @@ class FirebaseAuthServices {
       return credential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text("Error"),
-                content: const Text("Sorry,Can not find user"),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("OK"))
-                ],
-              );
-            });
+        showErrorDialog(context, "Sorry, Can not find user");
       } else if (e.code == 'wrong-password') {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text("Error"),
-                content: const Text("Wrong password provided for the user"),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("OK"))
-                ],
-              );
-            });
+        showErrorDialog(context, "Wrong Password");
       } else if (e.code == 'email-not-verified') {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text("Error"),
-                content: Text("${e.message}"),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("OK"))
-                ],
-              );
-            });
+        showErrorDialog(context, e.message.toString());
       }
       rethrow;
     } catch (e) {
-      print(e);
+      showErrorDialog(context, e.toString());
       rethrow;
     }
   }
