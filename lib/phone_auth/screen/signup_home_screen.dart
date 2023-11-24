@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutterweb/sign_up_auth/screen/sign_in_screen.dart';
 
 class SignUpPhoneHomeScreen extends StatelessWidget {
-  final int phone;
-  const SignUpPhoneHomeScreen({super.key, required this.phone});
+  //final int phone;
+  const SignUpPhoneHomeScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class SignUpPhoneHomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Created account successfully!! with phone: $phone"),
+              const Text("Created account successfully!! with phone: "),
               const SizedBox(
                 height: 16,
               ),

@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterweb/phone_auth/screen/signin_phone_screen.dart';
+import 'package:flutterweb/phone_auth/screen/signup_home_screen.dart';
 import 'package:flutterweb/phone_auth/user_authentication/user_auth_phone.dart';
 
 import 'package:flutterweb/sign_up_auth/validation/signup_validation.dart';
@@ -10,38 +13,33 @@ class SignUpPhoneScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   SignUpPhoneScreen({super.key});
 
+  void _showErrorDialog(BuildContext context, String message) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Error"),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _submitPhoneNumber(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       try {
-     
-
-        // Start the phone number verification process
-        await FirebasePhoneAuth().verifyPhoneNumber(phoneController.text,context);
-
-        // Dismiss the loading indicator
-        Navigator.of(context).pop();
+        await FirebasePhoneAuth()
+            .verifyPhoneNumber(phoneController.text, context);
       } catch (e) {
-        // Dismiss the loading indicator
-        Navigator.of(context).pop();
-
-        // Show an error message
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Error"),
-              content: Text(e.toString()),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
+        _showErrorDialog(context, 'Invalid Format');
       }
     }
   }
@@ -99,7 +97,13 @@ class SignUpPhoneScreen extends StatelessWidget {
                       children: [
                         const Text("Already have an account?"),
                         TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          SignInPhoneScreen()));
+                            },
                             child: Text(
                               "Sign In",
                               style: TextStyle(
@@ -116,19 +120,19 @@ class SignUpPhoneScreen extends StatelessWidget {
                   ),
                   TextButton(
                       onPressed: () async {
-                        // try {
-                        //   UserCredential userCredential =
-                        //       await authService.googleSignIn();
-                        //   print(
-                        //       'User signed up and signed in with Google: ${userCredential.user}');
-                        //   Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //           builder: (context) => SignUpHomeScreen(
-                        //               email: userCredential.user!.email!)));
-                        // } catch (e) {
-                        //   print("Sign up with google failed:$e");
-                        // }
+                        try {
+                          UserCredential userCredential =
+                              await FirebasePhoneAuth().googleSignIn();
+                          print(
+                              'User signed up and signed in with Google: ${userCredential.user}');
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const SignUpPhoneHomeScreen()));
+                        } catch (e) {
+                          print("Sign up with google failed:$e");
+                        }
                       },
                       child: const Text("Continue with Google")),
                 ],
