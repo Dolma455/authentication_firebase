@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterweb/sign_up_auth/user_auth_implementation/auth_const.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -70,11 +73,13 @@ class FirebaseAuthServices {
           message: 'Please verify your email before signing in.',
         );
       }
+
       return credential;
     } on FirebaseAuthException catch (e) {
+      log("Error is ${e.code}");
       if (e.code == 'user-not-found') {
         showErrorDialog(context, "Sorry, Can not find user");
-      } else if (e.code == 'wrong-password') {
+      } else if (e.code == AuthConst.invalidLogin) {
         showErrorDialog(context, "Wrong Password");
       } else if (e.code == 'email-not-verified') {
         showErrorDialog(context, e.message.toString());

@@ -37,7 +37,7 @@ class SignUpPhoneScreen extends StatelessWidget {
     if (_formKey.currentState!.validate()) {
       try {
         await FirebasePhoneAuth()
-            .verifyPhoneNumber(phoneController.text, context);
+            .verifyPhoneNumber("+977${phoneController.text}", context);
       } catch (e) {
         _showErrorDialog(context, 'Invalid Format');
       }
@@ -128,8 +128,7 @@ class SignUpPhoneScreen extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      const SignUpPhoneHomeScreen()));
+                                  builder: (context) => SignInPhoneScreen()));
                         } catch (e) {
                           print("Sign up with google failed:$e");
                         }
