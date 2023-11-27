@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterweb/phone_auth/screen/signin_phone_screen.dart';
-import 'package:flutterweb/phone_auth/screen/signup_home_screen.dart';
+
 import 'package:flutterweb/phone_auth/user_authentication/user_auth_phone.dart';
 
 import 'package:flutterweb/sign_up_auth/validation/signup_validation.dart';
